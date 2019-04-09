@@ -3,8 +3,8 @@
 #intervalos en segundos
 intervalo=1
 intervalo2=120
-indicativo="EA2CZO-11"
-mision="ARANZADI"
+indicativo="EB2ELU-11"
+mision="DEEP_SPACE"
 #directorio donde se guardan las fotos
 home="/home/pi/sstv/"
 #contador de transmisiones
