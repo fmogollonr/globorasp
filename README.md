@@ -14,7 +14,13 @@ $ sudo ./install.sh
 
 El sistema comenzará a hacer fotos y a transmitirlas por SSTV
 
+# Hardware
+
+* Raspberry pi 3 B+
+* Baofeng UV 3 con *VOX* habilitado
+
 # Funcionamiento
+
 
 * Captura de imágen con la cámara de la raspberry
 * Reducción de la imágen a 360x240
