@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #La duración de un ciclo de hacer foto -> transmformación a sonido sstv, reproducción de sonido dura aproximadamente 62 segundos en una raspberry pi 3 B+
 #intervalos en segundos
 intervalo=1
@@ -14,6 +14,35 @@ ntrans=10
 while true
 do
 #echo $contador
+
+#extraer datos del GPS
+gpsmessage=`python3 gps.py`
+IFS=';' read -ra ADDR <<< "$gpsmessage"
+
+latitude=${ADDR[0]}
+longitude=${ADDR[1]}
+utc_fecha=${ADDR[2]}
+altitude=${ADDR[3]}
+lat_len=$(echo -n $latitude | wc -m)
+lon_len=$(echo -n $longitude | wc -m)
+
+# Si latitud o longitud tienen un tamaño muy grande se recortan para que entren bien en la imágen
+lat=$latitude
+long=$longitude
+if [[ $lat_len -gt 10 ]]
+then
+lat=${latitude::-4}
+fi
+if [[ $lon_len -gt 10 ]]
+then
+long=${longitude::-4}
+fi
+position=$lat"/"$long
+altura="$altitude.m"
+
+
+# configuramos la hora de la raspberry desde el GPS
+date -s "$utc_fecha"
 # tomamos la hora
 fecha=$(date +"%Y-%m-%d_%H%M%S")
 #hacemos una foto y la guardamos como fecha_hora.jpg
@@ -21,9 +50,13 @@ raspistill -o $home"/"$fecha.big.jpg
 #redimensionamos la foto a 320x240
 convert $home"/"$fecha.big.jpg -resize 320x240! $home"/"$fecha.jpg
 #Insertamos el nombre de la misión arriba a la izquierda en rojo
-convert -pointsize 20 -fill red -draw 'text 5,20 '$mision $home"/"$fecha.jpg $home"/"$fecha._.jpg
+convert -pointsize 20 -fill red  -gravity NorthWest -annotate 0 $mision $home"/"$fecha.jpg $home"/"$fecha.1.jpg
 # insertamos el indicativo abajo a la derecha en rojo
-convert -pointsize 20 -fill red -draw 'text 210,235 '$indicativo $home"/"$fecha._.jpg $home"/"$fecha.jpg
+convert -pointsize 20 -fill red -gravity SouthEast -annotate 0 $indicativo $home"/"$fecha.1.jpg $home"/"$fecha.2.jpg
+#Insertamos la altitud abajo a la izquierda
+convert -pointsize 20 -fill red -gravity SouthWest -annotate 0 $altura $home"/"$fecha.2.jpg $home"/"$fecha.3.jpg
+#Insertamos la posición arriba a la derecha
+convert -pointsize 20 -fill red -gravity NorthEast -annotate 0 $position $home"/"$fecha.3.jpg $home"/"$fecha.jpg
 
 #convertimos la foto a a un wav que contiene el sstv
 python3 -m pysstv --mode Robot36 --vox $home"/"$fecha.jpg $home"/"$fecha.wav
@@ -34,6 +67,8 @@ rm $home"/"$fecha._.jpg
 #borramos el wav
 rm $home"/"$fecha.wav
 # comprobamos si llevamos menos transmisiones que laqs que queremos para el primer intervalo
+
+echo "DONE"
 if [ $contador -lt $ntrans ]
 then
 	#si llevamos menos, paramos lun tiempo que dura el primer intervalo
