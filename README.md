@@ -4,13 +4,13 @@ Este proyecto contiene diferentes utilidades para realizar la transmisión en SS
 
 # Instalación
 
-crear un directorio /home/pi/sstv y copiar todos los ficheros en ese directorio.
+* Crear un directorio */home/pi/sstv* y copiar todos los ficheros en ese directorio.
 
-Ejecutar el script *install.sh*
+* Ejecutar el script *install.sh*
 
 $ sudo ./install.sh
 
-Reiniciar la raspberry
+* Reiniciar la raspberry
 
 El sistema comenzará a hacer fotos y a transmitirlas por SSTV
 
