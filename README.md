@@ -17,6 +17,7 @@ El sistema comenzará a hacer fotos y a transmitirlas por SSTV
 # Hardware
 
 * Raspberry pi 3 B+
+* GPS USB
 * Baofeng UV 3 con *VOX* habilitado
 
 # Funcionamiento
