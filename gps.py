@@ -9,8 +9,12 @@ gpsd.connect()
 gpsd.connect(host="127.0.0.1", port=2947)
 
 # Get gps position
-packet = gpsd.get_current()
+try:
+	packet = gpsd.get_current()
+	print(str(packet.lat)+";"+str(packet.lon)+";"+str(packet.time)+";"+str(packet.alt))
+except:
+	#No GPS
+	print("0.0;0.0;;0.0")
 
 # See the inline docs for GpsResponse for the available data
 #print(packet.position())
-print(str(packet.lat)+";"+str(packet.lon)+";"+str(packet.time)+";"+str(packet.alt))
