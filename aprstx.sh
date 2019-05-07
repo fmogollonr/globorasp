@@ -6,6 +6,15 @@
 
 callsign="EB2ELU"
 outputfile="aprs.wav"
+time=`date +"%Y-%m-%d %T" --utc`
+lat="45.26"
+lon="10.1"
+speed="150"
+temp="-10"
+alt="1000"
 
-aprs -c $callsign ":EMAIL    :test@example.com Test email" -o $outputfile
+#http://midnightcheese.com/2015/12/super-simple-aprs-position-beacon/
+#$command = 'aprs -c '.$callsign.' -o packet.wav "/'.$time.'z'.$lat.'N/'.$lon.'W>'.$course.'/'.$speed.$comment.'/A='.$alt.'"';
+command="/$time""z""$lat""N""$lon""W/$speed/A=$alt"
+aprs -c $callsign -o $outputfile "$command"
 
