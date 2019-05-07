@@ -1,6 +1,12 @@
 # Utilidades para globos estratosféricos basadas en raspberry pi
 
-Este proyecto contiene diferentes utilidades para realizar la transmisión en SSTV de imágenes obtenidas con una raspberry pi 3
+Este proyecto contiene diferentes utilidades para realizar la transmisión en SSTV en modo robot36 de imágenes obtenidas con una raspberry pi 3
+
+
+# Funcionalidades
+
+* Transmisión en modo robot 36 de un indicativo y un nombre de misión
+* Transmisión de la posición GPS y la altura del globo si se dispone de un GPS USB compatible con gpsd
 
 # Instalación
 
