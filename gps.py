@@ -1,7 +1,13 @@
 #! /usr/bin/python
 #https://github.com/MartijnBraam/gpsd-py3
 import gpsd
+import math
 
+def truncate(number, digits) -> float:
+    stepper = pow(10.0, digits)
+    return math.trunc(stepper * number) / stepper
+
+truncateDigits=4
 # Connect to the local gpsd
 gpsd.connect()
 
@@ -11,7 +17,15 @@ gpsd.connect(host="127.0.0.1", port=2947)
 # Get gps position
 try:
 	packet = gpsd.get_current()
-	print(str(packet.lat)+";"+str(packet.lon)+";"+str(packet.time)+";"+str(packet.alt))
+	latitude=packet.lat
+	lat=(truncate(latitude,truncateDigits))
+	longitude=packet.lon
+	lon=(truncate(longitude,truncateDigits))
+	time=packet.time
+	altitude=packet.alt
+	alt=(truncate(altitude,0))
+	print(str(lat)+";"+str(lon)+";"+str(time)+";"+str(alt))
+
 except:
 	#No GPS
 	print("0.0;0.0;;0.0")
