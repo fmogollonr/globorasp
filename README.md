@@ -10,7 +10,7 @@ Este proyecto contiene diferentes utilidades para realizar la transmisión en SS
 
 # Instalación
 
-* Crear un directorio */home/pi/sstv* y copiar todos los ficheros en ese directorio.
+* Crear un directorio */home/pi/balloon/* y copiar todos los ficheros en ese directorio.
 
 * Ejecutar el script *install.sh*
 
