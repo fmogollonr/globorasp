@@ -6,45 +6,46 @@ intervalo2=120
 indicativo="EB2ELU-11"
 mision="DEEP_SPACE"
 #directorio donde se guardan las fotos
-home="/home/pi/sstv/"
+home="/home/pi/balloon/"
 #contador de transmisiones
 contador=0
 #numero de transmisiones con el primer intervalo
 ntrans=10
 while true
 do
-#echo $contador
+	#echo $contador
 
-#extraer datos del GPS
-gpsmessage=`python3 gps.py`
+	#extraer datos del GPS
+	gpsmessage=`python3 gps.py`
 
-position="."
-altura="."
-if [[ $gpsmessage != "0.0;0.0;;0.0" ]]
-then	
-	IFS=';' read -ra ADDR <<< "$gpsmessage"
-	latitude=${ADDR[0]}
-	longitude=${ADDR[1]}
-	utc_fecha=${ADDR[2]}
-	altitude=${ADDR[3]}
-	lat_len=$(echo -n $latitude | wc -m)
-	lon_len=$(echo -n $longitude | wc -m)
-	# Si latitud o longitud tienen un tamaño muy grande se recortan para que entren bien en la imágen
-	lat=$latitude
-	long=$longitude
-	if [[ $lat_len -gt 10 ]]
-	then
-		lat=${latitude::-4}
+	position="."
+	altura="."
+	#Si la salida del GPS es correcta se parsean los datos
+	if [[ $gpsmessage != "0.0;0.0;;0.0" ]]
+	then	
+		IFS=';' read -ra ADDR <<< "$gpsmessage"
+		latitude=${ADDR[0]}
+		longitude=${ADDR[1]}
+		utc_fecha=${ADDR[2]}
+		altitude=${ADDR[3]}
+		lat_len=$(echo -n $latitude | wc -m)
+		lon_len=$(echo -n $longitude | wc -m)
+		# Si latitud o longitud tienen un tamaño muy grande se recortan para que entren bien en la imágen
+		lat=$latitude
+		long=$longitude
+		if [[ $lat_len -gt 10 ]]
+		then
+			lat=${latitude::-4}
+		fi
+		if [[ $lon_len -gt 10 ]]
+		then
+			long=${longitude::-4}
+		fi
+		position=$lat"/"$long
+		altura="$altitude.m"
+		# configuramos la hora de la raspberry desde el GPS
+		date -s "$utc_fecha"
 	fi
-	if [[ $lon_len -gt 10 ]]
-	then
-		long=${longitude::-4}
-	fi
-	position=$lat"/"$long
-	altura="$altitude.m"
-	# configuramos la hora de la raspberry desde el GPS
-	date -s "$utc_fecha"
-fi
 
 # tomamos la hora
 fecha=$(date +"%Y-%m-%d_%H%M%S")
