@@ -69,15 +69,15 @@ convert -pointsize 20 -fill red -gravity SouthWest -annotate 0 $altura $home"/"$
 convert -pointsize 20 -fill red -gravity NorthEast -annotate 0 $position $home"/"$fecha.3.jpg $home"/"$fecha.jpg
 
 #convertimos la foto a a un wav que contiene el sstv
-python3 -m pysstv --mode Robot36 --vox $home"/"$fecha.jpg $home"/"$fecha.wav
+python3 -m pysstv --mode Robot36 --vox $home"/"$fecha.jpg $home"/"$fecha.sstv.wav
 # reproducimos el wav
-aplay $home"/"$fecha.wav
+aplay $home"/"$fecha.sstv.wav
 #borramos foto temporal
 rm $home"/"$fecha.1.jpg
 rm $home"/"$fecha.2.jpg
 rm $home"/"$fecha.3.jpg
 #borramos el wav
-rm $home"/"$fecha.wav
+rm $home"/"$fecha.sstv.wav
 # comprobamos si llevamos menos transmisiones que laqs que queremos para el primer intervalo
 
 echo "DONE"
