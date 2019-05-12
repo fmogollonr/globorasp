@@ -32,7 +32,7 @@ try:
 			gps_pos=str(lat)+";"+str(lon)+";"+str(gpstime)+";"+str(alt)
 			initTime=datetime.utcnow()
 			formated_time = initTime.strftime("%Y%m%d_%H%M%S")
-			data=formated_time+":"+gps_pos
+			data=formated_time+": "+gps_pos
 			#print(data)
 			f= open(home+"gps.log","a")
 			f.write(data+"\n")
