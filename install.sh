@@ -1,7 +1,7 @@
 #!/bin/sh 
 sudo apt-get update
-sudo apt-get install python-pyaudio python3-pyaudio imagemagick -y
-sudo pip3 install pySSTV gpsd-py3 afsk
+sudo apt-get install python-pyaudio python3-pyaudio imagemagick direwolf -y
+sudo pip3 install pySSTV gpsd-py3
 echo '# Default settings for the gpsd init script and the hotplug wrapper.
 # Start the gpsd daemon automatically at boot time
 START_DAEMON="false"
