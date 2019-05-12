@@ -6,7 +6,10 @@ intervalo2=120
 indicativo="EB2ELU-11"
 mision="DEEP_SPACE"
 #directorio donde se guardan las fotos
-home="/home/pi/balloon/"
+#home="/home/pi/balloon/"
+home="/home/felipe/Documents/radio/soft/globorasp/"
+gpsFile=$home"gps.log"
+
 #contador de transmisiones
 contador=0
 #numero de transmisiones con el primer intervalo
@@ -15,8 +18,9 @@ while true
 do
 	#echo $contador
 
-	#extraer datos del GPS
-	gpsmessage=`python3 gps.py`
+	#extraer datos del fichero de logs del GPS
+	tmpgps=`tail -n 1 $gpsFile`
+	gpsmessage=`echo $tmpgps | sed 's/: /\n/g' | grep T`
 
 	position="."
 	altura="."
@@ -50,7 +54,9 @@ do
 # tomamos la hora
 fecha=$(date +"%Y-%m-%d_%H%M%S")
 #hacemos una foto y la guardamos como fecha_hora.jpg
-raspistill -o $home"/"$fecha.big.jpg
+#raspistill -o $home"/"$fecha.big.jpg
+#random jpg
+mx=320;my=240;head -c "$((3*mx*my))" /dev/urandom | convert -depth 8 -size "${mx}x${my}" RGB:- $fecha.big.jpg
 #redimensionamos la foto a 320x240
 convert $home"/"$fecha.big.jpg -resize 320x240! $home"/"$fecha.jpg
 #Insertamos el nombre de la misión arriba a la izquierda en rojo
