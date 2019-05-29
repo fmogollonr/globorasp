@@ -26,8 +26,7 @@ gpsFile=$home"gps.log"
 
 #contador de transmisiones
 contador=0
-#numero de transmisiones con el primer intervalo
-ntrans=10
+
 altitud=0
 while true
 do
