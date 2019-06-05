@@ -7,6 +7,18 @@ indicativo="EB2ELU-11"
 mision="DEEP_SPACE"
 #altitud en metros a partir de la cual se quiere pasar de enviar fotos tan rápido (intervalo1) como se pueda a mandarlas más pausada esperando intervalo2 entre cada transmisión
 altitud_ref=100
+
+#######################################################################
+#######################################################################
+#######################################################################
+#NO TOCAR
+#NO TOCAR
+#NO TOCAR
+#NO TOCAR
+#NO TOCAR
+#NO TOCAR
+#NO TOCAR
+#NO TOCAR
 #directorio donde se guardan las fotos
 home="/home/pi/sstv/"
 #home="/home/felipe/Documents/radio/soft/globorasp/"
@@ -14,8 +26,7 @@ gpsFile=$home"gps.log"
 
 #contador de transmisiones
 contador=0
-#numero de transmisiones con el primer intervalo
-ntrans=10
+
 altitud=0
 while true
 do
