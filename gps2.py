@@ -13,7 +13,7 @@ LOG = logging.getLogger()
 truncateDigits=4
 home="/home/pi/sstv/"
 initTime=datetime.utcnow()
-gpsdate=""
+gpsdateString=""
 
 # GUIDE
 # http://ava.upuaut.net/?p=768
@@ -57,8 +57,8 @@ def parseResponse(gpsLine):
     gpsStart = gpsComponents[0]
     if (gpsStart == "$GNRMC"):
         global gpsdate
-        gpsdate =gpsComponents[9]
-        print("date is "+gpsdate)
+        gpsdateString =json.dumps(gpsComponents[9]).replace('"','')
+        print("date is "+gpsdateString)
     elif (gpsStart == "$GNGGA"):
         chkVal = 0
         for ch in gpsStr[1:]: # Remove the $
@@ -71,20 +71,14 @@ def parseResponse(gpsLine):
                 'alt', 'altUnit', 'galt', 'galtUnit',
                 'DPGS_updt', 'DPGS_ID']):
                 GPSDAT[k] = gpsComponents[i]
-            print(GPSDAT['fixTime'])
-            latitude=float(GPSDAT['lat'])/100
-            longitude=float(GPSDAT['lon'])/100
-            altitude=float(GPSDAT['alt'])
-            time=float(GPSDAT['fixTime'])
-            print("date2 is "+gpsdate)
-            gpstime = datetime.strptime(gpsdate+" "+str(time), '%d%m%Y%m %H%M%S.%f')
-            print("gpstime")
-            print(gpstime)
-            lon=(truncate(longitude,truncateDigits))
-            lat=(truncate(latitude,truncateDigits))
-            alt=(truncate(altitude,0))
-
-            date_time_str = '2018-06-29 08:15:27.243860'  
+            latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
+            longitude=float(json.dumps(GPSDAT['lon']).replace('"','')/100
+            #altitude=float(json.dumps(GPSDAT['alt']).replace('"',''))
+            #time=json.dumps(GPSDAT['fixTime']).replace('"','')
+            #gpstime = datetime.strptime(gpsdate+" "+str(time), '%d%m%Y%m %H%M%S.%f')
+            #lon=truncate(longitude,truncateDigits)
+            #lat=truncate(latitude,truncateDigits)
+            #alt=(truncate(altitude,0))
 
             #gps_pos=str(lat)+";"+str(lon)+";"+str(gpstime)+";"+str(alt)
             #initTime=datetime.utcnow()
@@ -94,8 +88,6 @@ def parseResponse(gpsLine):
             #f.write(data+"\n")
             #f.close()
             #time.sleep(10)
-            print(lat)
-            print(lon)
 
 def readGPS():
     c = None
