@@ -13,7 +13,6 @@ LOG = logging.getLogger()
 truncateDigits=4
 home="/home/pi/sstv/"
 initTime=datetime.utcnow()
-gpsdateString=""
 
 # GUIDE
 # http://ava.upuaut.net/?p=768
@@ -39,7 +38,22 @@ GPSDAT = {
 def truncate(number, digits) -> float:
     stepper = pow(10.0, digits)
     return math.trunc(stepper * number) / stepper
+def split_number(s,number):
+    return [s[i:i+number] for i in range(0, len(s), number)]
 
+def string_date_to_date(dateString,time):
+    splittedDate=split_number(dateString,2)
+    year=splittedDate[2]
+    month=splittedDate[1]
+    day=splittedDate[0]
+    truncatedTime=truncate(time,0)
+    splittedTime=split_number(truncatedTime,2)
+    hour=splittedTime[0]
+    minute=splittedTime[1]
+    secs=splittedTime[2]
+    dateTime=datetime(year,month,day,hour,minute,secs)
+    #print("dateTime is ",dateTime)
+    return dateTime
 def connectBus():
     global BUS
     BUS = smbus.SMBus(1)
@@ -56,9 +70,8 @@ def parseResponse(gpsLine):
     gpsComponents = gpsStr.split(',')
     gpsStart = gpsComponents[0]
     if (gpsStart == "$GNRMC"):
-        global gpsdate
+        global gpsdateString
         gpsdateString =json.dumps(gpsComponents[9]).replace('"','')
-        print("date is "+gpsdateString)
     elif (gpsStart == "$GNGGA"):
         chkVal = 0
         for ch in gpsStr[1:]: # Remove the $
@@ -71,24 +84,37 @@ def parseResponse(gpsLine):
                 'alt', 'altUnit', 'galt', 'galtUnit',
                 'DPGS_updt', 'DPGS_ID']):
                 GPSDAT[k] = gpsComponents[i]
+            print(GPSDAT)
             latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
             longitude=float(json.dumps(GPSDAT['lon']).replace('"',''))/100
             altitude=float(json.dumps(GPSDAT['alt']).replace('"',''))
-            #time=json.dumps(GPSDAT['fixTime']).replace('"','')
-            #gpstime = datetime.strptime(gpsdate+" "+str(time), '%d%m%Y%m %H%M%S.%f')
-            #lon=truncate(longitude,truncateDigits)
-            #lat=truncate(latitude,truncateDigits)
-            #alt=(truncate(altitude,0))
+            time=json.dumps(GPSDAT['fixTime']).replace('"','')
+            print(time)
+            #print("date is "+gpsdateString)
+            #string_date_to_date(gpsdateString,time)
 
-            #gps_pos=str(lat)+";"+str(lon)+";"+str(gpstime)+";"+str(alt)
+            #date_time_str=gpsdateString+"-"+time
+            # if gpsdateString is not "":
+            #     print("checking")
+            #     date_time_str=gpsdateString
+            #     date_time_obj = datetime.datetime.strptime(date_time_str, '%d%m%Y-%H%M%S')
+            #     print("fecha "+date_time_obj.date())
+            # else:
+            #     print("otro")
+            # #time=json.dumps(GPSDAT['fixTime']).replace('"','')
+            #gpstime = datetime.strptime(gpsdate+" "+str(time), '%d%m%Y%m %H%M%S.%f')
+            lon=truncate(longitude,truncateDigits)
+            lat=truncate(latitude,truncateDigits)
+            alt=(truncate(altitude,0))
+
+            gps_pos=str(lat)+";"+str(lon)+";"+str(alt)
+            #print(gps_pos)
             #initTime=datetime.utcnow()
             #formated_time = initTime.strftime("%Y%m%d_%H%M%S")
             #data=formated_time+": "+gps_pos
             #f= open(home+"gps.log","a")
             #f.write(data+"\n")
             #f.close()
-            time.sleep(10)
-
 def readGPS():
     c = None
     response = []
