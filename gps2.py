@@ -72,8 +72,8 @@ def parseResponse(gpsLine):
                 'DPGS_updt', 'DPGS_ID']):
                 GPSDAT[k] = gpsComponents[i]
             latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
-            longitude=float(json.dumps(GPSDAT['lon']).replace('"','')/100
-            #altitude=float(json.dumps(GPSDAT['alt']).replace('"',''))
+            longitude=float(json.dumps(GPSDAT['lon']).replace('"',''))/100
+            altitude=float(json.dumps(GPSDAT['alt']).replace('"',''))
             #time=json.dumps(GPSDAT['fixTime']).replace('"','')
             #gpstime = datetime.strptime(gpsdate+" "+str(time), '%d%m%Y%m %H%M%S.%f')
             #lon=truncate(longitude,truncateDigits)
@@ -87,7 +87,7 @@ def parseResponse(gpsLine):
             #f= open(home+"gps.log","a")
             #f.write(data+"\n")
             #f.close()
-            #time.sleep(10)
+            time.sleep(10)
 
 def readGPS():
     c = None
