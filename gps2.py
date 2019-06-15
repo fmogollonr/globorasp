@@ -43,17 +43,16 @@ def split_number(s,number):
 
 def string_date_to_date(dateString,time):
     splittedDate=split_number(dateString,2)
-    year=splittedDate[2]
+    year="20"+splittedDate[2]
     month=splittedDate[1]
     day=splittedDate[0]
-    truncatedTime=truncate(time,0)
-    splittedTime=split_number(truncatedTime,2)
+    splittedTime=split_number(time,2)
     hour=splittedTime[0]
     minute=splittedTime[1]
     secs=splittedTime[2]
-    dateTime=datetime(year,month,day,hour,minute,secs)
-    #print("dateTime is ",dateTime)
-    return dateTime
+    if year.isdigit() and month.isdigit() and day.isdigit() and hour.isdigit() and minute.isdigit() and secs.isdigit():
+        dateTime=datetime(int(year),int(month),int(day),int(hour),int(minute),int(secs))
+        return dateTime
 def connectBus():
     global BUS
     BUS = smbus.SMBus(1)
@@ -84,37 +83,24 @@ def parseResponse(gpsLine):
                 'alt', 'altUnit', 'galt', 'galtUnit',
                 'DPGS_updt', 'DPGS_ID']):
                 GPSDAT[k] = gpsComponents[i]
-            print(GPSDAT)
+            #print(GPSDAT)
             latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
             longitude=float(json.dumps(GPSDAT['lon']).replace('"',''))/100
             altitude=float(json.dumps(GPSDAT['alt']).replace('"',''))
             time=json.dumps(GPSDAT['fixTime']).replace('"','')
-            print(time)
-            #print("date is "+gpsdateString)
-            #string_date_to_date(gpsdateString,time)
-
-            #date_time_str=gpsdateString+"-"+time
-            # if gpsdateString is not "":
-            #     print("checking")
-            #     date_time_str=gpsdateString
-            #     date_time_obj = datetime.datetime.strptime(date_time_str, '%d%m%Y-%H%M%S')
-            #     print("fecha "+date_time_obj.date())
-            # else:
-            #     print("otro")
-            # #time=json.dumps(GPSDAT['fixTime']).replace('"','')
-            #gpstime = datetime.strptime(gpsdate+" "+str(time), '%d%m%Y%m %H%M%S.%f')
+            truncatedTime=time.split(".")[0]
             lon=truncate(longitude,truncateDigits)
             lat=truncate(latitude,truncateDigits)
             alt=(truncate(altitude,0))
+            newdate=string_date_to_date(gpsdateString,truncatedTime)
+            if newdate is not -1:
+                printdate=newdate.strftime("%Y-%m-%dT%H:%M:%S.00Z")
+                presdate=newdate.strftime("%Y%m%d_%H%M%S")
+                gps_pos=str(presdate)+": "+str(lat)+";"+str(lon)+";"+printdate+";"+str(alt)
+                f= open(home+"gps.log","a")
+                f.write(gps_pos+"\n")
+                f.close()
 
-            gps_pos=str(lat)+";"+str(lon)+";"+str(alt)
-            #print(gps_pos)
-            #initTime=datetime.utcnow()
-            #formated_time = initTime.strftime("%Y%m%d_%H%M%S")
-            #data=formated_time+": "+gps_pos
-            #f= open(home+"gps.log","a")
-            #f.write(data+"\n")
-            #f.close()
 def readGPS():
     c = None
     response = []
