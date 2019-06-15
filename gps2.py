@@ -13,6 +13,7 @@ LOG = logging.getLogger()
 truncateDigits=4
 home="/home/pi/sstv/"
 initTime=datetime.utcnow()
+timeout=10
 
 # GUIDE
 # http://ava.upuaut.net/?p=768
@@ -83,23 +84,39 @@ def parseResponse(gpsLine):
                 'alt', 'altUnit', 'galt', 'galtUnit',
                 'DPGS_updt', 'DPGS_ID']):
                 GPSDAT[k] = gpsComponents[i]
-            #print(GPSDAT)
-            latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
-            longitude=float(json.dumps(GPSDAT['lon']).replace('"',''))/100
-            altitude=float(json.dumps(GPSDAT['alt']).replace('"',''))
-            time=json.dumps(GPSDAT['fixTime']).replace('"','')
-            truncatedTime=time.split(".")[0]
-            lon=truncate(longitude,truncateDigits)
-            lat=truncate(latitude,truncateDigits)
-            alt=(truncate(altitude,0))
-            newdate=string_date_to_date(gpsdateString,truncatedTime)
-            if newdate is not -1:
-                printdate=newdate.strftime("%Y-%m-%dT%H:%M:%S.00Z")
-                presdate=newdate.strftime("%Y%m%d_%H%M%S")
-                gps_pos=str(presdate)+": "+str(lat)+";"+str(lon)+";"+printdate+";"+str(alt)
-                f= open(home+"gps.log","a")
-                f.write(gps_pos+"\n")
-                f.close()
+            if (GPSDAT['lat']) is '' or GPSDAT['lon'] is '' or GPSDAT['alt'] is '':
+                gps_error()
+            else:
+                latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
+                longitude=float(json.dumps(GPSDAT['lon']).replace('"',''))/100
+                altitude=float(json.dumps(GPSDAT['alt']).replace('"',''))
+                time=json.dumps(GPSDAT['fixTime']).replace('"','')
+                truncatedTime=time.split(".")[0]
+                lon=truncate(longitude,truncateDigits)
+                lat=truncate(latitude,truncateDigits)
+                alt=(truncate(altitude,0))
+                newdate=string_date_to_date(gpsdateString,truncatedTime)
+                if newdate is not -1:
+                    printdate=newdate.strftime("%Y-%m-%dT%H:%M:%S.00Z")
+                    presdate=newdate.strftime("%Y%m%d_%H%M%S")
+                    gps_pos=str(presdate)+": "+str(lat)+";"+str(lon)+";"+printdate+";"+str(alt)
+                    print(gps_pos)
+                    f= open(home+"gps.log","a")
+                    f.write(gps_pos+"\n")
+                    f.close()
+                    time.sleep(timeout)
+
+def gps_error():
+    print("No GPS")
+    print("0.0;0.0;;0.0")
+    initTime=datetime.utcnow()
+    formated_time = initTime.strftime("%Y%m%d_%H%M%S")
+    gps_pos="0.0;0.0;;0.0"
+    data=formated_time+": "+gps_pos
+    f= open(home+"gps.log","a")
+    f.write(data+"\n")
+    f.close()
+    time.sleep(timeout)
 
 def readGPS():
     c = None
