@@ -15,6 +15,8 @@ home="/home/pi/sstv/"
 initTime=datetime.utcnow()
 timeout=10
 
+print("startgps")
+
 # GUIDE
 # http://ava.upuaut.net/?p=768
 
@@ -39,6 +41,8 @@ GPSDAT = {
 def truncate(number, digits) -> float:
     stepper = pow(10.0, digits)
     return math.trunc(stepper * number) / stepper
+
+
 def split_number(s,number):
     return [s[i:i+number] for i in range(0, len(s), number)]
 
@@ -54,12 +58,13 @@ def string_date_to_date(dateString,time):
     if year.isdigit() and month.isdigit() and day.isdigit() and hour.isdigit() and minute.isdigit() and secs.isdigit():
         dateTime=datetime(int(year),int(month),int(day),int(hour),int(minute),int(secs))
         return dateTime
+
+
 def connectBus():
     global BUS
     BUS = smbus.SMBus(1)
 
 def parseResponse(gpsLine):
-
     global lastLocation
     gpsChars = ''.join(chr(c) for c in gpsLine)
     if "*" not in gpsChars:
@@ -87,11 +92,12 @@ def parseResponse(gpsLine):
             if (GPSDAT['lat']) is '' or GPSDAT['lon'] is '' or GPSDAT['alt'] is '':
                 gps_error()
             else:
+                print("gps position")
                 latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
                 longitude=float(json.dumps(GPSDAT['lon']).replace('"',''))/100
                 altitude=float(json.dumps(GPSDAT['alt']).replace('"',''))
-                time=json.dumps(GPSDAT['fixTime']).replace('"','')
-                truncatedTime=time.split(".")[0]
+                gpstime=json.dumps(GPSDAT['fixTime']).replace('"','')
+                truncatedTime=gpstime.split(".")[0]
                 lon=truncate(longitude,truncateDigits)
                 lat=truncate(latitude,truncateDigits)
                 alt=(truncate(altitude,0))
@@ -132,6 +138,8 @@ def readGPS():
                 response.append(c)
         parseResponse(response)
     except IOError:
+        print("IO error")
+        gps_error()
         time.sleep(0.5)
         connectBus()
     except Exception as e:
