@@ -5,7 +5,7 @@ import os
 import math
 import sys
 
-def zpad(val, n):
+def fill_with_leading_zeros(val, n):
     bits = val.split('.')
     if "-" in bits[0]:
         return "%s.%s" % (bits[0].zfill(n+1), bits[1])
@@ -42,10 +42,8 @@ lon=gps_parts[1]
 lat=gps_parts[0]
 hour=gps_parts[2]
 alt=message_tmp[3].split(";")[1]
-#print(alt_tmp)
 
 callsign="EB2ELU-11"
-#outputfile="/tmp/aprs.wav"
 time=datetime.datetime.utcnow().strftime("%H:%M:%S").split('.')
 #speed="150" #m/s
 #temp="-10" #grados centígrados
@@ -58,9 +56,9 @@ msg="testing"
 latGra,latMin,latSecs=string_to_ggmmss(lat)
 lonGra,lonMin,lonSecs=string_to_ggmmss(lon)
 
-newLat=zpad(latGra+latMin+"."+latSecs,4)
-newLong=zpad(lonGra+lonMin+"."+lonSecs,5)
-newAlt=zpad(alt,6).split(".")[0]
+newLat=fill_with_leading_zeros(latGra+latMin+"."+latSecs,4)
+newLong=fill_with_leading_zeros(lonGra+lonMin+"."+lonSecs,5)
+newAlt=fill_with_leading_zeros(alt,6).split(".")[0]
 
 
 print("newLat "+newLat)
