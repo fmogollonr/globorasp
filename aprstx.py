@@ -57,6 +57,17 @@ def zpad(val, n):
         return "%s.%s" % (bits[0].zfill(n+1), bits[1])
     return "%s.%s" % (bits[0].zfill(n), bits[1])
 
+def split_number(s,number):
+    return [s[i:i+number] for i in range(0, len(s), number)]
+
+def string_to_ggmmss(pos):
+    tmp=pos.replace(" ","").split(".")
+    gra=tmp[0]
+    mmss=tmp[1]
+    tmp=split_number(mmss,2)
+    minutes=tmp[0]
+    secs=tmp[1]
+    return gra,minutes,secs
 
 def getGPSLine(filePath):
     fileHandle = open ( filePath,"r" )
@@ -93,30 +104,21 @@ time=datetime.datetime.utcnow().strftime("%H:%M:%S").split('.')
 #temp="-10" #grados centígrados
 #alt="1000" #feet
 msg="testing"
-#pre="1000.0"
-speed="0.020"
 
-print("lat "+lat)
-print("lat "+lat)
 
-auxLat=float(lat)
-auxLong=float(lon)
 
-lon,lat=dd2dms(auxLong,auxLat)
-print(lon)
-print(lat)
 
-latitude=float(lat)/100
-longitude=float(lon)/100
+latGra,latMin,latSecs=string_to_ggmmss(lat)
+lonGra,lonMin,lonSecs=string_to_ggmmss(lon)
 
-newLat=str(zpad(str(latitude),4))
-newLong=str(zpad(str(longitude),4))
+newLat=zpad(latGra+latMin+"."+latSecs,4)
+newLong=zpad(lonGra+lonMin+"."+lonSecs,5)
+newAlt=zpad(alt,6).split(".")[0]
 
-tmpLat=float(newLat)
-tmpLong=float(newLong)
 
-newLat=zpad(str(truncate(tmpLat,2)),4)
-newLong=zpad(str(truncate(tmpLong,2)),5)
+print("newLat "+newLat)
+print("newLong "+newLong)
+
 
 
 import os
@@ -128,7 +130,7 @@ except:
 
 #http://wiki.ashab.space/doku.php?id=ns1:telemetria
 #EA1IDZ-11>WORLD,WIDE2-2:!4331.52N/00540.05WO0/0.020/A=37.2/V=7.64/P=1018.0/TI=29.50/TO=26.94/23-04-2016/19:52:49/GPS=43.525415N,005.667503W/EA1IDZ test baliza APRS/SSTV ea1idz@ladecadence.net
-message=callsign+">WORLD,WIDE2-2:!"+newLat+"N/"+newLong+"W/0"+speed+"/A="+alt+"/"+str(time[0])+"/"+msg
+message=callsign+">WORLD,WIDE2-2:!"+newLat+"N/"+newLong+"WO/A="+newAlt+"/"+str(time[0])+"/"+msg
 print(message)
 command="echo -n \""+message+"\" | gen_packets -a 100 -o "+home_folder+"aprs.wav - "
 os.system(command)
