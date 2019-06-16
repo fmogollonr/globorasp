@@ -27,9 +27,6 @@ def getGPSLine(filePath):
     fileHandle = open ( filePath,"r" )
     lineList = fileHandle.readlines()
     fileHandle.close()
-    #print("The last line is:")
-    # or simply
-    #print(lineList[-1])
     return lineList[-1]
 
 def truncate(number, digits) -> float:
