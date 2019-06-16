@@ -29,10 +29,6 @@ def getGPSLine(filePath):
     fileHandle.close()
     return lineList[-1]
 
-def truncate(number, digits) -> float:
-    stepper = pow(10.0, digits)
-    return math.trunc(stepper * number) / stepper
-
 home_folder="/home/pi/sstv/"
 gps_file=home_folder+"gps.log"
 gps_message=getGPSLine(gps_file).rstrip()
