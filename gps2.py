@@ -38,6 +38,8 @@ GPSDAT = {
     'DPGS_ID': None
 }
 
+
+
 def truncate(number, digits) -> float:
     stepper = pow(10.0, digits)
     return math.trunc(stepper * number) / stepper
@@ -65,6 +67,7 @@ def connectBus():
     BUS = smbus.SMBus(1)
 
 def parseResponse(gpsLine):
+    errorCounter=0
     global lastLocation
     gpsChars = ''.join(chr(c) for c in gpsLine)
     if "*" not in gpsChars:
@@ -95,6 +98,12 @@ def parseResponse(gpsLine):
                 print("gps position")
                 latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
                 longitude=float(json.dumps(GPSDAT['lon']).replace('"',''))/100
+                #lon,lat=dd2dms(longitude,latitude)
+
+                #latitude=float(lat)/100
+                #longitude=float(lon)/100
+
+
                 altitude=float(json.dumps(GPSDAT['alt']).replace('"',''))
                 gpstime=json.dumps(GPSDAT['fixTime']).replace('"','')
                 truncatedTime=gpstime.split(".")[0]
@@ -129,21 +138,25 @@ def readGPS():
     response = []
     try:
         while True: # Newline, or bad char.
-            c = BUS.read_byte(address)
-            if c == 255:
-                return False
-            elif c == 10:
-                break
-            else:
-                response.append(c)
+            try:
+                c = BUS.read_byte(address)
+                if c == 255:
+                    return False
+                elif c == 10:
+                    break
+                else:
+                    response.append(c)
+            except Exception as e:
+                print(e)
+                gps_error()
         parseResponse(response)
     except IOError:
         print("IO error")
-        gps_error()
         time.sleep(0.5)
         connectBus()
     except Exception as e:
         print(e)
+        gps_error()
     #    LOG.error(e)
 
 connectBus()
