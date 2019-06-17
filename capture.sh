@@ -54,34 +54,34 @@ do
 		lonO=${ADDR[3]}
 		utc_fecha=${ADDR[4]}
 		altitude=${ADDR[5]}
-		echo "latitude "$latitude
-		echo "longitude "$longitude
+		#echo "latitude "$latitude
+		#echo "longitude "$longitude
 		lat_len=$(echo -n $latitude | wc -m)
 		lon_len=$(echo -n $longitude | wc -m)
 
 		tmpLat=$(echo $latitude | sed 's/^0*//')
 		tmpLon=$(echo $longitude | sed 's/^0*//')
-		echo $tmpLon
+		#echo $tmpLon
 		# Si latitud o longitud tienen un tamaño muy grande se recortan para que entren bien en la imágen
 		lat=`echo "print($tmpLat/100)" | python3`
 		lon=`echo "print($tmpLon/100)" | python3`
-		echo "lat $lat"
-		echo "lon $lon"
-		echo "lat len "$lat_len
-		echo "lon len "$lon_len
+		#echo "lat $lat"
+		#echo "lon $lon"
+		#echo "lat len "$lat_len
+		#echo "lon len "$lon_len
 		if [[ $lat_len -gt 8 ]]
 		then
 			lat=${lat::-3}
-			echo "lat is "$lat
+			#echo "lat is "$lat
 		fi
 		if [[ $lon_len -gt 8 ]]
 		then
 			lon=${lon::-12}
-			echo "lon is "$lon
+			#echo "lon is "$lon
 		fi
 		altitud=`echo ${altitude%.*}`
 		position=$lat$latO"/"$lon$lonO
-		echo "position is "$position
+		#echo "position is "$position
 		altura="$altitud.M"
 		# configuramos la hora de la raspberry desde el GPS
 		date -s "$utc_fecha"

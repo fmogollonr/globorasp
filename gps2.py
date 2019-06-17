@@ -68,8 +68,6 @@ def connectBus():
     BUS = smbus.SMBus(1)
 
 def parseResponse(gpsLine):
-    errorCounter=0
-    global lastLocation
     gpsChars = ''.join(chr(c) for c in gpsLine)
     if "*" not in gpsChars:
         return False
@@ -99,9 +97,9 @@ def parseResponse(gpsLine):
             if (GPSDAT['lat']) is '' or GPSDAT['lon'] is '' or GPSDAT['alt'] is '':
                 gps_error()
             else:
-                print("gps position")
-                print(GPSDAT['lat'])
-                print(GPSDAT['lon'])
+                #print("gps position")
+                #print(GPSDAT['lat'])
+                #print(GPSDAT['lon'])
                 global gpserror
                 gpserror=0
                 latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
