@@ -122,7 +122,7 @@ def parseResponse(gpsLine):
                     presdate=newdate.strftime("%Y%m%d_%H%M%S")
                     #gps_pos=str(presdate)+": "+str(lat)+";"+GPSDAT['latDir']+";"+str(lon)+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)
                     gps_pos=str(presdate)+": "+GPSDAT['lat']+";"+GPSDAT['latDir']+";"+GPSDAT['lon']+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)
-                    print(gps_pos)
+                    #print(gps_pos)
                     f= open(home+"gps.log","a")
                     f.write(gps_pos+"\n")
                     f.close()
