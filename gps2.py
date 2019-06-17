@@ -13,7 +13,8 @@ LOG = logging.getLogger()
 truncateDigits=4
 home="/home/pi/sstv/"
 initTime=datetime.utcnow()
-timeout=10
+timeout=1
+gpserror=0
 
 print("startgps")
 
@@ -80,6 +81,9 @@ def parseResponse(gpsLine):
     if (gpsStart == "$GNRMC"):
         global gpsdateString
         gpsdateString =json.dumps(gpsComponents[9]).replace('"','')
+    elif (gpsStart == "$GPRMC"):
+        print("GPRMC")
+        print(gpsComponents)
     elif (gpsStart == "$GNGGA"):
         chkVal = 0
         for ch in gpsStr[1:]: # Remove the $
@@ -96,6 +100,10 @@ def parseResponse(gpsLine):
                 gps_error()
             else:
                 print("gps position")
+                print(GPSDAT['lat'])
+                print(GPSDAT['lon'])
+                global gpserror
+                gpserror=0
                 latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
                 longitude=float(json.dumps(GPSDAT['lon']).replace('"',''))/100
                 #lon,lat=dd2dms(longitude,latitude)
@@ -114,7 +122,8 @@ def parseResponse(gpsLine):
                 if newdate is not -1:
                     printdate=newdate.strftime("%Y-%m-%dT%H:%M:%S.00Z")
                     presdate=newdate.strftime("%Y%m%d_%H%M%S")
-                    gps_pos=str(presdate)+": "+str(lat)+";"+str(lon)+";"+printdate+";"+str(alt)
+                    #gps_pos=str(presdate)+": "+str(lat)+";"+GPSDAT['latDir']+";"+str(lon)+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)
+                    gps_pos=str(presdate)+": "+GPSDAT['lat']+";"+GPSDAT['latDir']+";"+GPSDAT['lon']+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)
                     print(gps_pos)
                     f= open(home+"gps.log","a")
                     f.write(gps_pos+"\n")
@@ -122,16 +131,21 @@ def parseResponse(gpsLine):
                     time.sleep(timeout)
 
 def gps_error():
-    print("No GPS")
-    print("0.0;0.0;;0.0")
-    initTime=datetime.utcnow()
-    formated_time = initTime.strftime("%Y%m%d_%H%M%S")
-    gps_pos="0.0;0.0;;0.0"
-    data=formated_time+": "+gps_pos
-    f= open(home+"gps.log","a")
-    f.write(data+"\n")
-    f.close()
-    time.sleep(timeout)
+    global gpserror
+    gpserror+=1
+    #print("gpserror"+str(gpserror))
+    if gpserror== 10:
+        gpserror=0
+        print("No GPS")
+        print("0.0;0.0;;0.0")
+        initTime=datetime.utcnow()
+        formated_time = initTime.strftime("%Y%m%d_%H%M%S")
+        gps_pos="0.0;0.0;;0.0"
+        data=formated_time+": "+gps_pos
+        f= open(home+"gps.log","a")
+        f.write(data+"\n")
+        f.close()
+        time.sleep(timeout)
 
 def readGPS():
     c = None

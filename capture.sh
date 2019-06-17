@@ -49,24 +49,39 @@ do
 	then	
 		IFS=';' read -ra ADDR <<< "$gpsmessage"
 		latitude=${ADDR[0]}
-		longitude=${ADDR[1]}
-		utc_fecha=${ADDR[2]}
-		altitude=${ADDR[3]}
+		latO=${ADDR[1]}
+		longitude=${ADDR[2]}
+		lonO=${ADDR[3]}
+		utc_fecha=${ADDR[4]}
+		altitude=${ADDR[5]}
+		echo "latitude "$latitude
+		echo "longitude "$longitude
 		lat_len=$(echo -n $latitude | wc -m)
 		lon_len=$(echo -n $longitude | wc -m)
+
+		tmpLat=$(echo $latitude | sed 's/^0*//')
+		tmpLon=$(echo $longitude | sed 's/^0*//')
+		echo $tmpLon
 		# Si latitud o longitud tienen un tamaño muy grande se recortan para que entren bien en la imágen
-		lat=$latitude
-		long=$longitude
-		if [[ $lat_len -gt 10 ]]
+		lat=`echo "print($tmpLat/100)" | python3`
+		lon=`echo "print($tmpLon/100)" | python3`
+		echo "lat $lat"
+		echo "lon $lon"
+		echo "lat len "$lat_len
+		echo "lon len "$lon_len
+		if [[ $lat_len -gt 8 ]]
 		then
-			lat=${latitude::-4}
+			lat=${lat::-3}
+			echo "lat is "$lat
 		fi
-		if [[ $lon_len -gt 10 ]]
+		if [[ $lon_len -gt 8 ]]
 		then
-			long=${longitude::-4}
+			lon=${lon::-12}
+			echo "lon is "$lon
 		fi
 		altitud=`echo ${altitude%.*}`
-		position=$lat"/"$long
+		position=$lat$latO"/"$lon$lonO
+		echo "position is "$position
 		altura="$altitud.M"
 		# configuramos la hora de la raspberry desde el GPS
 		date -s "$utc_fecha"
