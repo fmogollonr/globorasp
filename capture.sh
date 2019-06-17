@@ -71,16 +71,16 @@ do
 
 		latRest=`echo "print($lat_len - 6)" | python3`
 		lonRest=`echo "print($lon_len - 5)" | python3`
-		echo "lat is "$lat
-		echo "lon is "$lon
-		echo "lat len "$lat_len
-		echo "lon len "$lon_len
-		echo "latRest "$latRest
-		echo "lonRest "$lonRest
+		# echo "lat is "$lat
+		# echo "lon is "$lon
+		# echo "lat len "$lat_len
+		# echo "lon len "$lon_len
+		# echo "latRest "$latRest
+		# echo "lonRest "$lonRest
 		lat=${lat::-$latRest}
-		echo "lat is "$lat
+		# echo "lat is "$lat
 		lon=${lon::-$lonRest}
-		echo "lon is "$lon
+		# echo "lon is "$lon
 		altitud=`echo ${altitude%.*}`
 		position=$lat$latO"/"$lon$lonO
 		#echo "position is "$position
