@@ -57,23 +57,7 @@ time=datetime.datetime.utcnow().strftime("%H:%M:%S").split('.')
 msg="testing"
 
 
-
-
-latGra,latMin,latSecs=string_to_ggmmss(lat)
-
-print("latitude "+latGra+" : "+latMin+" : "+latSecs)
-lonGra,lonMin,lonSecs=string_to_ggmmss(lon)
-print("longitude "+lonGra+" : "+lonMin+" : "+lonSecs)
-
-newLat=fill_with_leading_zeros(latGra+latMin+"."+latSecs,4)
-newLong=fill_with_leading_zeros(lonGra+lonMin+"."+lonSecs,5)
 newAlt=fill_with_leading_zeros(alt,6).split(".")[0]
-
-
-#print("newLat "+newLat)
-#print("newLong "+newLong)
-
-
 
 import os
 try:
