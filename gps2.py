@@ -102,27 +102,18 @@ def parseResponse(gpsLine):
                 #print(GPSDAT['lon'])
                 global gpserror
                 gpserror=0
-                latitude=float(json.dumps(GPSDAT['lat']).replace('"',''))/100
-                longitude=float(json.dumps(GPSDAT['lon']).replace('"',''))/100
-                #lon,lat=dd2dms(longitude,latitude)
-
-                #latitude=float(lat)/100
-                #longitude=float(lon)/100
-
 
                 altitude=float(json.dumps(GPSDAT['alt']).replace('"',''))
                 gpstime=json.dumps(GPSDAT['fixTime']).replace('"','')
                 truncatedTime=gpstime.split(".")[0]
-                lon=truncate(longitude,truncateDigits)
-                lat=truncate(latitude,truncateDigits)
-                alt=(truncate(altitude,0))
+                alt=float((truncate(altitude,0))*3.28084)
                 newdate=string_date_to_date(gpsdateString,truncatedTime)
                 if newdate is not -1:
                     printdate=newdate.strftime("%Y-%m-%dT%H:%M:%S.00Z")
                     presdate=newdate.strftime("%Y%m%d_%H%M%S")
                     #gps_pos=str(presdate)+": "+str(lat)+";"+GPSDAT['latDir']+";"+str(lon)+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)
                     gps_pos=str(presdate)+": "+GPSDAT['lat']+";"+GPSDAT['latDir']+";"+GPSDAT['lon']+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)
-                    #print(gps_pos)
+                    print(gps_pos)
                     f= open(home+"gps.log","a")
                     f.write(gps_pos+"\n")
                     f.close()
