@@ -15,6 +15,7 @@ home="/home/pi/sstv/"
 initTime=datetime.utcnow()
 timeout=1
 gpserror=0
+speed=0
 
 print("startgps")
 
@@ -76,12 +77,13 @@ def parseResponse(gpsLine):
     #print(gpsStr)  
     gpsComponents = gpsStr.split(',')
     gpsStart = gpsComponents[0]
+    #print(gpsStart)
     if (gpsStart == "$GNRMC"):
         global gpsdateString
+        global speed
+        print("speed "+json.dumps(gpsComponents[7]))
+        speed=json.dumps(gpsComponents[7])
         gpsdateString =json.dumps(gpsComponents[9]).replace('"','')
-    elif (gpsStart == "$GPRMC"):
-        print("GPRMC")
-        print(gpsComponents)
     elif (gpsStart == "$GNGGA"):
         chkVal = 0
         for ch in gpsStr[1:]: # Remove the $
@@ -112,7 +114,7 @@ def parseResponse(gpsLine):
                     printdate=newdate.strftime("%Y-%m-%dT%H:%M:%S.00Z")
                     presdate=newdate.strftime("%Y%m%d_%H%M%S")
                     #gps_pos=str(presdate)+": "+str(lat)+";"+GPSDAT['latDir']+";"+str(lon)+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)
-                    gps_pos=str(presdate)+": "+GPSDAT['lat']+";"+GPSDAT['latDir']+";"+GPSDAT['lon']+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)
+                    gps_pos=str(presdate)+": "+GPSDAT['lat']+";"+GPSDAT['latDir']+";"+GPSDAT['lon']+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)+";"+speed.replace('"','')
                     print(gps_pos)
                     f= open(home+"gps.log","a")
                     f.write(gps_pos+"\n")
