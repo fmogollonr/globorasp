@@ -56,29 +56,31 @@ do
 		altitude=${ADDR[5]}
 		#echo "latitude "$latitude
 		#echo "longitude "$longitude
-		lat_len=$(echo -n $latitude | wc -m)
-		lon_len=$(echo -n $longitude | wc -m)
+
 
 		tmpLat=$(echo $latitude | sed 's/^0*//')
 		tmpLon=$(echo $longitude | sed 's/^0*//')
+
+
 		#echo $tmpLon
 		# Si latitud o longitud tienen un tamaño muy grande se recortan para que entren bien en la imágen
 		lat=`echo "print($tmpLat/100)" | python3`
 		lon=`echo "print($tmpLon/100)" | python3`
-		#echo "lat $lat"
-		#echo "lon $lon"
-		#echo "lat len "$lat_len
-		#echo "lon len "$lon_len
-		if [[ $lat_len -gt 8 ]]
-		then
-			lat=${lat::-3}
-			#echo "lat is "$lat
-		fi
-		if [[ $lon_len -gt 8 ]]
-		then
-			lon=${lon::-12}
-			#echo "lon is "$lon
-		fi
+		lat_len=$(echo -n $lat | wc -m)
+		lon_len=$(echo -n $lon | wc -m)
+
+		latRest=`echo "print($lat_len - 6)" | python3`
+		lonRest=`echo "print($lon_len - 5)" | python3`
+		echo "lat is "$lat
+		echo "lon is "$lon
+		echo "lat len "$lat_len
+		echo "lon len "$lon_len
+		echo "latRest "$latRest
+		echo "lonRest "$lonRest
+		lat=${lat::-$latRest}
+		echo "lat is "$lat
+		lon=${lon::-$lonRest}
+		echo "lon is "$lon
 		altitud=`echo ${altitude%.*}`
 		position=$lat$latO"/"$lon$lonO
 		#echo "position is "$position
