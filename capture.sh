@@ -108,8 +108,17 @@ do
 	rm $home"/"$fecha.1.jpg
 	rm $home"/"$fecha.2.jpg
 	rm $home"/"$fecha.3.jpg
+	lockfile=$home"/lock"
 	# reproducimos el wav
+	while test -f "$lockfile"
+	do
+		echo "locked"
+		sleep 1
+	done
+	touch $lockfile
 	aplay $home"/"$fecha.sstv.wav
+	rm $lockfile
+	echo "played"
 
 	#borramos el wav
 	rm $home"/"$fecha.sstv.wav

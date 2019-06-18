@@ -26,6 +26,7 @@ import os
 import math
 import sys
 import time
+from pathlib import Path
 
 home_folder="/home/pi/sstv/"
 gps_file=home_folder+"gps.log"
@@ -86,21 +87,27 @@ while True:
         dateHour=gps_parts[0].replace(" ","")
 
         currentTime=datetime.datetime.utcnow().strftime("%H:%M:%S").split('.')
-        #speed="150" #m/s
-        #temp="-10" #grados centígrados
-        #alt="1000" #feet
 
 
         newAlt=fill_with_leading_zeros(alt,6).split(".")[0]
 
         try:
             os.remove(outputfile)
-            print("File Removed!")
+            #print("File Removed!")
         except:
             print("no file")
+            
 
         message=callsign+">WORLD,WIDE2-2:!"+lat[:-3]+latO+"/"+lon[:-3]+lonO+"O/A="+newAlt+"/"+str(currentTime[0])+"/"+msg
-        print(message)
+        #print(message)
         command="echo -n \""+message+"\" | gen_packets -a 100 -o "+outputfile+" - >/dev/null"
         os.system(command)
-        #os.system("aplay "+outputfile)
+        while os.path.exists(home_folder+"/lock") is True:
+            time.sleep(waitTime)
+            pass
+        Path(home_folder+"/lock").touch()
+        os.system("aplay "+outputfile)
+        try:
+            os.remove(home_folder+"/lock")
+        except:
+            print("no file")
