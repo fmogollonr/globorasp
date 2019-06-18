@@ -81,7 +81,6 @@ def parseResponse(gpsLine):
     if (gpsStart == "$GNRMC"):
         global gpsdateString
         global speed
-        print("speed "+json.dumps(gpsComponents[7]))
         speed=json.dumps(gpsComponents[7])
         gpsdateString =json.dumps(gpsComponents[9]).replace('"','')
     elif (gpsStart == "$GNGGA"):
@@ -114,7 +113,7 @@ def parseResponse(gpsLine):
                     printdate=newdate.strftime("%Y-%m-%dT%H:%M:%S.00Z")
                     presdate=newdate.strftime("%Y%m%d_%H%M%S")
                     #gps_pos=str(presdate)+": "+str(lat)+";"+GPSDAT['latDir']+";"+str(lon)+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)
-                    gps_pos=str(presdate)+": "+GPSDAT['lat']+";"+GPSDAT['latDir']+";"+GPSDAT['lon']+";"+GPSDAT['lonDir']+";"+printdate+";"+str(alt)+";"+speed.replace('"','')
+                    gps_pos=str(presdate)+": "+printdate+";"+GPSDAT['lat']+";"+GPSDAT['latDir']+";"+GPSDAT['lon']+";"+GPSDAT['lonDir']+";"+str(alt)+";"+speed.replace('"','')
                     print(gps_pos)
                     f= open(home+"gps.log","a")
                     f.write(gps_pos+"\n")

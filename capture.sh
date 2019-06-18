@@ -48,12 +48,13 @@ do
 	if [[ $gpsmessage != "0.0;0.0;;0.0" ]]
 	then	
 		IFS=';' read -ra ADDR <<< "$gpsmessage"
-		latitude=${ADDR[0]}
-		latO=${ADDR[1]}
-		longitude=${ADDR[2]}
-		lonO=${ADDR[3]}
-		utc_fecha=${ADDR[4]}
+		latitude=${ADDR[1]}
+		latO=${ADDR[2]}
+		longitude=${ADDR[3]}
+		lonO=${ADDR[4]}
+		utc_fecha=${ADDR[0]}
 		altitude=${ADDR[5]}
+		speed=${ADDR[6]}
 		#echo "latitude "$latitude
 		#echo "longitude "$longitude
 
