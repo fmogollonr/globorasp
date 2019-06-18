@@ -1,10 +1,36 @@
 # Este script transmite una trama aprs para hacer seguimiento de un globo aerostático
 # This script will transmit an APRS trace to track a balloon
+
+
+#Indicativo
+callsign="EB2ELU-11"
+#Tiempo de espera en segundos para volver a mandar otra trama de APRS
+waitTime=2
+#Mensaje extra
+msg="testing"
+
+
+
+###############################################################
+###############################################################
+###############################################################
+###############################################################
+###NO TOCAR A PARTIR DE AQUI
+###NO TOCAR A PARTIR DE AQUI
+###NO TOCAR A PARTIR DE AQUI
+###NO TOCAR A PARTIR DE AQUI
+###NO TOCAR A PARTIR DE AQUI
+###NO TOCAR A PARTIR DE AQUI
 import datetime
 import os
 import math
 import sys
 import time
+
+home_folder="/home/pi/sstv/"
+gps_file=home_folder+"gps.log"
+outputfile=home_folder+"aprs.wav"
+lastGPSLine="xxxxx"
 
 #http://wiki.ashab.space/doku.php?id=ns1:telemetria
 #EA1IDZ-11>WORLD,WIDE2-2:!4331.52N/00540.05WO0/0.020/A=37.2/V=7.64/P=1018.0/TI=29.50/TO=26.94/23-04-2016/19:52:49/GPS=43.525415N,005.667503W/EA1IDZ test baliza APRS/SSTV ea1idz@ladecadence.net
@@ -38,13 +64,7 @@ def getGPSLine(filePath):
     fileHandle.close()
     return lineList[-1]
 
-home_folder="/home/pi/sstv/"
-gps_file=home_folder+"gps.log"
-callsign="EB2ELU-11"
-msg="testing"
-outputfile=home_folder+"aprs.wav"
-lastGPSLine="xxxxx"
-waitTime=2
+
 
 while True:
     time.sleep(waitTime)
