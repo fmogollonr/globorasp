@@ -32,7 +32,7 @@ while true
 do
 	#echo $contador
 
-	#extraer datos del fichero de logs del GPS
+	#extraer datos del fichero de logs del GPS, se lee la última línea
 	tmpgps=`tail -n 1 $gpsFile`
 	gpsmessage=""
 	if [[ $tmpgps == *"0.0;0.0;;0.0"* ]]
@@ -46,17 +46,17 @@ do
 	altura="."
 	#Si la salida del GPS es correcta se parsean los datos
 	if [[ $gpsmessage != "0.0;0.0;;0.0" ]]
-	then	
+	then
+		# Separo por punto y coma
+		#horaGPS;Lat;LatOrientación;Lon;LonOrientación;altitud en metros;velocidad
 		IFS=';' read -ra ADDR <<< "$gpsmessage"
+		utc_fecha=${ADDR[0]}
 		latitude=${ADDR[1]}
 		latO=${ADDR[2]}
 		longitude=${ADDR[3]}
 		lonO=${ADDR[4]}
-		utc_fecha=${ADDR[0]}
 		altitude=${ADDR[5]}
 		speed=${ADDR[6]}
-		#echo "latitude "$latitude
-		#echo "longitude "$longitude
 
 
 		tmpLat=$(echo $latitude | sed 's/^0*//')
@@ -69,22 +69,12 @@ do
 		lon=`echo "print($tmpLon/100)" | python3`
 		lat_len=$(echo -n $lat | wc -m)
 		lon_len=$(echo -n $lon | wc -m)
-
 		latRest=`echo "print($lat_len - 6)" | python3`
 		lonRest=`echo "print($lon_len - 5)" | python3`
-		# echo "lat is "$lat
-		# echo "lon is "$lon
-		# echo "lat len "$lat_len
-		# echo "lon len "$lon_len
-		# echo "latRest "$latRest
-		# echo "lonRest "$lonRest
 		lat=${lat::-$latRest}
-		# echo "lat is "$lat
 		lon=${lon::-$lonRest}
-		# echo "lon is "$lon
 		altitud=`echo ${altitude%.*}`
 		position=$lat$latO"/"$lon$lonO
-		#echo "position is "$position
 		altura="$altitud.M"
 		# configuramos la hora de la raspberry desde el GPS
 		date -s "$utc_fecha"
@@ -96,6 +86,7 @@ do
 	raspistill -o $home"/"$fecha.big.jpg
 	# imágen en blanco
 	#convert -size 320x240 xc:white $fecha.big.jpg
+
 	#redimensionamos la foto a 320x240
 	convert $home"/"$fecha.big.jpg -resize 320x240! $home"/"$fecha.jpg
 
@@ -122,8 +113,8 @@ do
 
 	#borramos el wav
 	rm $home"/"$fecha.sstv.wav
-	# comprobamos si llevamos menos transmisiones que laqs que queremos para el primer intervalo
-	echo "DONE"
+	# comprobamos si llevamos menos transmisiones que las que queremos para el primer intervalo
+	#echo "DONE"
 	if [ $((altitud)) -lt $altitud_ref ]
 	then
 		#si llevamos menos, paramos lun tiempo que dura el primer intervalo
