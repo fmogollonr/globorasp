@@ -5,7 +5,7 @@
 #Indicativo
 callsign="EB2ELU-11"
 #Tiempo de espera en segundos para volver a mandar otra trama de APRS
-waitTime=2
+waitTime=10
 #Mensaje extra
 msg="testing"
 
@@ -91,22 +91,25 @@ while True:
 
         newAlt=fill_with_leading_zeros(alt,6).split(".")[0]
 
-        try:
-            os.remove(outputfile)
-            #print("File Removed!")
-        except:
-            print("no file")
+        #try:
+        #    os.remove(outputfile)
+        #    #print("File Removed!")
+        #except:
+        #    print("no file")
             
 
-        message=callsign+">WORLD,WIDE2-2:!"+lat[:-3]+latO+"/"+lon[:-3]+lonO+"O/A="+newAlt+"/"+str(currentTime[0])+"/"+msg
-        #print(message)
+        message=callsign+">WORLD,WIDE2-2:!"+lat[:-3]+latO+"/"+lon[:-3]+lonO+"O/"+speed+"/A="+newAlt+"/"+str(currentTime[0])+"/"+msg
+        print(message)
         command="echo -n \""+message+"\" | gen_packets -a 100 -o "+outputfile+" - >/dev/null"
         os.system(command)
         while os.path.exists(home_folder+"/lock") is True:
             time.sleep(waitTime)
             pass
         Path(home_folder+"/lock").touch()
-        os.system("aplay "+outputfile)
+        #os.system("play -n synth 0:0:2 whitenoise")
+        #os.system("aplay -f cdr "+outputfile)
+        os.system("sudo -u pi aplay -f cdr "+outputfile)
+        os.system("sudo -u pi aplay -f cdr "+outputfile)
         try:
             os.remove(home_folder+"/lock")
         except:
