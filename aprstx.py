@@ -108,7 +108,7 @@ while True:
         Path(home_folder+"/lock").touch()
         #os.system("play -n synth 0:0:2 whitenoise")
         #os.system("aplay -f cdr "+outputfile)
-        os.system("sudo -u pi aplay -f cdr "+outputfile)
+        os.system("sudo -u pi play -n synth 0:0:0.1")
         os.system("sudo -u pi aplay -f cdr "+outputfile)
         try:
             os.remove(home_folder+"/lock")
