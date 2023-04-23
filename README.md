@@ -20,12 +20,27 @@ $ sudo ./install.sh
 
 El sistema comenzará a hacer fotos y a transmitirlas por SSTV
 
-# Hardware
+# Requisitos
 
-* Raspberry pi 3 B+
+* Raspbian 11
+* Raspberry pi 4 
 * GPS USB
-* Baofeng UV 3 con *VOX* habilitado
+* Baofeng UV 3 con *VOX* habilitado (Funciona con cualquier equipo con VOX)
+* Cámara Raspberry
 
+# GPS
+Editar */etc/default/gpsd* 
+```
+# Devices gpsd should collect to at boot time.
+# They need to be read/writeable, either by user gpsd or the group dialout.
+DEVICES="/dev/ttyACM0"
+
+# Other options you want to pass to gpsd
+GPSD_OPTIONS=""
+
+# Automatically hot add/remove USB GPS devices via gpsdctl
+USBAUTO="true"
+```
 # Funcionamiento
 
 
