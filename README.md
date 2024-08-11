@@ -63,4 +63,27 @@ La configuración de la captura y transmisión de imágenes SSTV se realiza modi
 * ntrans: Número de transmisiones durante las cuales el sistema esperará el primer intervalo
 
 
+# Modo imágenes grabadas
 
+Desarrollado en pruebas en un PC x86, debería ser compatible con una raspberry 4
+
+## Dependencias
+### Instalar dependencias de python3
+
+```
+sudo apt-get update
+sudo apt-get install python3-pyaudio imagemagick direwolf python3-pip -y
+sudo pip install -r requirements.txt
+```
+
+
+# Funcionamiento
+
+modificar capture.sh con los parámetros adecuados
+
+- intervalo=1
+- intervalo2=120
+- indicativo="EB2ELU-11"
+- mision="DEEP_SPACE"
+- sstv_mode (Robot 36 o PD120)
+- mode Files o camera

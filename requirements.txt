@@ -1,0 +1,2 @@
+pySSTV
+gpsd-py3
