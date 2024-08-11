@@ -1,8 +1,6 @@
 home=$1
 sstv_mode=$2
 echo SSTV mode is $sstv_mode
-#rm $home/*.wav
-#home=$1
 set -x
 resolution="640x496"
 

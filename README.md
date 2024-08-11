@@ -72,7 +72,7 @@ Desarrollado en pruebas en un PC x86, debería ser compatible con una raspberry 
 
 ```
 sudo apt-get update
-sudo apt-get install python3-pyaudio imagemagick direwolf python3-pip -y
+sudo apt-get install python3-pyaudio imagemagick direwolf python3-pip mpg321 -y
 sudo pip install -r requirements.txt
 ```
 
